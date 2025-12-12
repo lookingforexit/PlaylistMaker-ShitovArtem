@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,7 +56,7 @@ fun MainScreen(
         ) {
             Text(
                 modifier = Modifier.padding(start = 12.dp, top = 24.dp),
-                text = "Playlist maker",
+                text = stringResource(R.string.playlist_maker),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -81,7 +82,7 @@ fun ScreenContent() {
             val context = LocalContext.current
             Element(
                 screenIcon = Icons.Default.Search,
-                text = "Поиск",
+                text = stringResource(R.string.search),
                 onClick = {
                     val intent = Intent(context, SearchActivity::class.java)
                     context.startActivity(intent)
@@ -90,19 +91,19 @@ fun ScreenContent() {
 
             Element(
                 painterIcon = painterResource(R.drawable.ic_music_icon),
-                text = "Плейлист",
+                text = stringResource(R.string.playlist),
                 onClick = {  }
             )
 
             Element(
                 screenIcon = Icons.Default.FavoriteBorder,
-                text = "Избранное",
+                text = stringResource(R.string.favorite),
                 onClick = { }
             )
 
             Element(
                 screenIcon = Icons.Default.Settings,
-                text = "Настройки",
+                text = stringResource(R.string.settings),
                 onClick = {
                     val intent = Intent(context, SettingsActivity::class.java)
                     context.startActivity(intent)
@@ -163,7 +164,7 @@ private fun ElementContent(icon: @Composable () -> Unit, text: String) {
         }
         Icon(
             imageVector = Icons.Default.KeyboardArrowRight,
-            contentDescription = "Перейти",
+            contentDescription = stringResource(R.string.move_to),
             tint = Color.Gray
         )
     }
