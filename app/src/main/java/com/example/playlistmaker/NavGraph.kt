@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.playlistmaker.ui.screen.MainScreen
+import com.example.playlistmaker.ui.screen.SearchScreen
+import com.example.playlistmaker.ui.screen.SettingsScreen
 
 enum class ScreenRoute(val route: String) {
     Main("main"),

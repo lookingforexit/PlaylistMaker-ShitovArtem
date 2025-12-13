@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.screen
 
 import android.content.Intent
 import androidx.compose.foundation.background
@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import com.example.playlistmaker.R
 
 @Composable
 fun SettingsScreen(onClick: () -> Unit) {
@@ -75,7 +76,12 @@ fun SettingsScreen(onClick: () -> Unit) {
 
         SettingsElement(
             text = stringResource(R.string.dark_theme),
-            onClick = { }
+            onClick = {
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                }
+                context.startActivity(intent)
+            }
         )
 
         SettingsElement(
@@ -88,10 +94,10 @@ fun SettingsScreen(onClick: () -> Unit) {
             },
             text = stringResource(R.string.share),
             onClick = {
-                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                val intent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
                 }
-                context.startActivity(Intent.createChooser(shareIntent, null))
+                context.startActivity(Intent.createChooser(intent, null))
             }
         )
 
@@ -105,13 +111,13 @@ fun SettingsScreen(onClick: () -> Unit) {
             },
             text = stringResource(R.string.support),
             onClick = {
-                val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                val intent = Intent(Intent.ACTION_SENDTO).apply {
                     data = "mailto:".toUri()
                     putExtra(Intent.EXTRA_EMAIL, arrayOf(context.getString(R.string.my_email)))
                     putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_to_devs))
                     putExtra(Intent.EXTRA_TEXT, context.getString(R.string.greet_for_devs))
                 }
-                context.startActivity(Intent.createChooser(emailIntent, null))
+                context.startActivity(Intent.createChooser(intent, null))
             }
         )
 

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.playlistmaker.R
 
 @Composable
 fun SearchScreen(onClick: () -> Unit) { var inputText by rememberSaveable { mutableStateOf("") }
