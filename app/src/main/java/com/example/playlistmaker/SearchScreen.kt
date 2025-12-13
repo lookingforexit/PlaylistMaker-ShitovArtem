@@ -56,7 +56,7 @@ fun SearchScreen() { var inputText by rememberSaveable { mutableStateOf("") }
                     .size(32.dp)
                     .clickable {},
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
+                contentDescription = stringResource(R.string.back),
                 tint = MaterialTheme.colorScheme.onBackground
             )
         }

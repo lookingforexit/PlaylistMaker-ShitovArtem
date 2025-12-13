@@ -2,6 +2,7 @@
 
 package com.example.playlistmaker
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,12 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,22 +30,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 
 @Composable
 fun SettingsScreen() {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-
     ) {
         TopAppBar(
             modifier = Modifier,
@@ -66,7 +65,7 @@ fun SettingsScreen() {
                         .size(32.dp)
                         .clickable {},
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.back),
                     tint = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -74,48 +73,82 @@ fun SettingsScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SettingsElement(stringResource(R.string.dark_theme))
+        SettingsElement(
+            text = stringResource(R.string.dark_theme),
+            onClick = { }
+        )
+
         SettingsElement(
             icon = {
                 Icon(
                     imageVector = Icons.Filled.Share,
-                    contentDescription = "Share",
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
-            } ,
-            text = stringResource(R.string.share))
+                    contentDescription = stringResource(R.string.share),
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            },
+            text = stringResource(R.string.share),
+            onClick = {
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                }
+                context.startActivity(Intent.createChooser(shareIntent, null))
+            }
+        )
+
         SettingsElement(
             icon = {
                 Icon(
-                    painter = painterResource( R.drawable.ic_helper),
-                    contentDescription = "Support",
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                    painter = painterResource(R.drawable.ic_helper),
+                    contentDescription = stringResource(R.string.support),
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
             },
-            text = stringResource(R.string.support)
+            text = stringResource(R.string.support),
+            onClick = {
+                val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                    data = "mailto:".toUri()
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf(context.getString(R.string.my_email)))
+                    putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.msg_to_devs))
+                    putExtra(Intent.EXTRA_TEXT, context.getString(R.string.greet_for_devs))
+                }
+                context.startActivity(Intent.createChooser(emailIntent, null))
+            }
         )
+
         SettingsElement(
             icon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Agreement",
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                    contentDescription = stringResource(R.string.user_agreement),
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
             },
-            text = stringResource(R.string.user_agreement)
+            text = stringResource(R.string.user_agreement),
+            onClick = {
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    context.getString(R.string.yandex_courses_offer).toUri()
+                )
+                context.startActivity(browserIntent)
+            }
         )
     }
 }
 
-
 @Composable
-fun SettingsElement(icon: @Composable () -> Unit, text: String) {
+fun SettingsElement(
+    icon: @Composable () -> Unit,
+    text: String,
+    onClick: () -> Unit = { }
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .clickable {},
-        ) {
+            .clickable(onClick = onClick),
+    ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -123,8 +156,7 @@ fun SettingsElement(icon: @Composable () -> Unit, text: String) {
                 text = text,
                 fontSize = 20.sp
             )
-
-            Box(modifier = Modifier.padding(end = 16.dp, top = 20.dp)){
+            Box(modifier = Modifier.padding(end = 16.dp, top = 20.dp)) {
                 icon()
             }
         }
@@ -132,16 +164,18 @@ fun SettingsElement(icon: @Composable () -> Unit, text: String) {
 }
 
 @Composable
-fun SettingsElement(text: String) {
+fun SettingsElement(
+    text: String,
+    onClick: () -> Unit = { }
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .clickable { },
-        ) {
+            .clickable(onClick = onClick),
+    ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
