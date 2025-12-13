@@ -33,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SearchScreen() { var inputText by rememberSaveable { mutableStateOf("") }
+fun SearchScreen(onClick: () -> Unit) { var inputText by rememberSaveable { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,7 +54,7 @@ fun SearchScreen() { var inputText by rememberSaveable { mutableStateOf("") }
                 modifier = Modifier
                     .padding(start = 16.dp)
                     .size(32.dp)
-                    .clickable {},
+                    .clickable { onClick() },
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = stringResource(R.string.back),
                 tint = MaterialTheme.colorScheme.onBackground

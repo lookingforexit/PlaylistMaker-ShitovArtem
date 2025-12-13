@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,7 +38,9 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -62,12 +62,15 @@ fun MainScreen(
                 color = Color.White
             )
         }
-        ScreenContent()
+        ScreenContent(
+            onSearchClick = { onSearchClick() },
+            onSettingsClick = { onSettingsClick() }
+        )
     }
 }
 
 @Composable
-fun ScreenContent() {
+fun ScreenContent(onSearchClick: () -> Unit, onSettingsClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -78,14 +81,11 @@ fun ScreenContent() {
         Column(
             modifier = Modifier.padding(top = 10.dp)
         ) {
-
-            val context = LocalContext.current
             Element(
                 screenIcon = Icons.Default.Search,
                 text = stringResource(R.string.search),
                 onClick = {
-                    val intent = Intent(context, SearchActivity::class.java)
-                    context.startActivity(intent)
+                    onSearchClick()
                 }
             )
 
@@ -105,8 +105,7 @@ fun ScreenContent() {
                 screenIcon = Icons.Default.Settings,
                 text = stringResource(R.string.settings),
                 onClick = {
-                    val intent = Intent(context, SettingsActivity::class.java)
-                    context.startActivity(intent)
+                    onSettingsClick()
                 }
             )
         }

@@ -13,6 +13,6 @@
     <string name="back">Back</string>
     <string name="msg_to_devs">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="greet_for_devs">Спасибо разработчикам и разработчицам за крутое приложение!</string>
-    <string name="yandex_courses_offer">https://yandex.ru/support/praktikum/</string>
+    <string name="yandex_courses_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="my_email">lookingforexit@yandex.com</string>
 </resources>

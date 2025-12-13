@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(onClick: () -> Unit) {
     val context = LocalContext.current
 
     Column(
@@ -63,7 +63,7 @@ fun SettingsScreen() {
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .size(32.dp)
-                        .clickable {},
+                        .clickable { onClick() },
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.back),
                     tint = MaterialTheme.colorScheme.onBackground
@@ -145,7 +145,7 @@ fun SettingsElement(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .clickable(onClick = onClick),
+            .clickable { onClick() },
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
