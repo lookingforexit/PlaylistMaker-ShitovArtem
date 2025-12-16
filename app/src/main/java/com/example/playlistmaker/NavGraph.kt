@@ -1,12 +1,15 @@
 package com.example.playlistmaker
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.playlistmaker.ui.screen.MainScreen
 import com.example.playlistmaker.ui.screen.SearchScreen
 import com.example.playlistmaker.ui.screen.SettingsScreen
+import com.example.playlistmaker.ui.screen.SuggestedSearchScreen
+import com.example.playlistmaker.ui.view_model.SearchViewModel
 
 enum class ScreenRoute(val route: String) {
     Main("main"),
@@ -15,7 +18,8 @@ enum class ScreenRoute(val route: String) {
 }
 
 class PlaylistHost(
-    private val navController: NavHostController
+    private val navController: NavHostController,
+    private val viewModel: SearchViewModel
 ) {
     private fun navigateToSearch() {
         navController.navigate(ScreenRoute.Search.route)
@@ -41,7 +45,7 @@ class PlaylistHost(
                 )
             }
             composable(ScreenRoute.Search.route) {
-                SearchScreen(onClick = { navigateBack() })
+                SuggestedSearchScreen(modifier = Modifier, viewModel = viewModel)
             }
             composable(ScreenRoute.Settings.route) {
                 SettingsScreen(onClick = { navigateBack() })

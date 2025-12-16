@@ -1,6 +1,9 @@
 package com.example.playlistmaker.creator
 
 import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.data.network.TracksRepositoryImpl
+import com.example.playlistmaker.domain.TracksRepository
 
 class Storage {
     private val listTracks = listOf(
@@ -63,5 +66,11 @@ class Storage {
                 .contains(request.lowercase())
         }
         return result
+    }
+}
+
+object Creator {
+    fun getTracksRepository(): TracksRepository {
+        return TracksRepositoryImpl(RetrofitNetworkClient(Storage()))
     }
 }
