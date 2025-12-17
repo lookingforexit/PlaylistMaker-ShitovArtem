@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -8,8 +9,7 @@ import androidx.navigation.compose.composable
 import com.example.playlistmaker.ui.screen.MainScreen
 import com.example.playlistmaker.ui.screen.SearchScreen
 import com.example.playlistmaker.ui.screen.SettingsScreen
-import com.example.playlistmaker.ui.screen.SuggestedSearchScreen
-import com.example.playlistmaker.ui.view_model.SearchViewModel
+import com.example.playlistmaker.ui.viewmodel.SearchViewModel
 
 enum class ScreenRoute(val route: String) {
     Main("main"),
@@ -45,7 +45,7 @@ class PlaylistHost(
                 )
             }
             composable(ScreenRoute.Search.route) {
-                SuggestedSearchScreen(modifier = Modifier, viewModel = viewModel)
+                SearchScreen(onClick = { navigateBack() }, modifier = Modifier.fillMaxSize(), viewModel = viewModel)
             }
             composable(ScreenRoute.Settings.route) {
                 SettingsScreen(onClick = { navigateBack() })

@@ -15,4 +15,7 @@
     <string name="greet_for_devs">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="yandex_courses_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="my_email">lookingforexit@yandex.com</string>
+    <string name="find_track">Найти трек</string>
+    <string name="error">Ошибка: %1$s</string>
+    <string name="track">Трек %1$s</string>
 </resources>

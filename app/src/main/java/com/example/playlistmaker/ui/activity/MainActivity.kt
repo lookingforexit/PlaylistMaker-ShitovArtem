@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.navigation.compose.rememberNavController
 import com.example.playlistmaker.PlaylistHost
 import com.example.playlistmaker.ui.theme.PlaylistMakerTheme
-import com.example.playlistmaker.ui.view_model.SearchViewModel
+import com.example.playlistmaker.ui.viewmodel.SearchViewModel
 
 class MainActivity : ComponentActivity() {
     private val searchViewModel by viewModels<SearchViewModel>{

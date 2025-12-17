@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,7 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -33,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,77 +43,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.network.Track
-import com.example.playlistmaker.ui.view_model.SearchState
-import com.example.playlistmaker.ui.view_model.SearchViewModel
+import com.example.playlistmaker.ui.viewmodel.SearchState
+import com.example.playlistmaker.ui.viewmodel.SearchViewModel
 
 @Composable
-fun SuggestedSearchScreen(
-    modifier: Modifier,
-    viewModel: SearchViewModel
-) {
+fun SearchScreen(onClick: () -> Unit, modifier: Modifier, viewModel: SearchViewModel) {
     val screenState by viewModel.searchScreenState.collectAsState()
-    var text by remember { mutableStateOf("") }
-    Column(
-        modifier = Modifier
-            .padding(top = 48.dp, start = 16.dp, end = 16.dp)
-            .fillMaxWidth(),
-    ) {
-        OutlinedTextField(
-            value = text,
-            onValueChange = {
-                text = it
-            },
-            leadingIcon = {
-                Icon(
-                    modifier = Modifier.clickable {
-                        viewModel.search(text)
-                    },
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Search Icon"
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        when (screenState) {
-            is SearchState.Initial -> {
-                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Введите строку для поиска")
-                }
-            }
-
-            is SearchState.Searching -> {
-                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            is SearchState.Success -> {
-                val tracks = (screenState as SearchState.Success).foundList
-                LazyColumn(
-                    modifier = modifier.fillMaxSize()
-                ) {
-                    items(tracks.size) { index ->
-                        TrackListItem(track = tracks[index])
-                        HorizontalDivider(thickness = 0.5.dp)
-                    }
-                }
-            }
-
-            is SearchState.Fail -> {
-                val error = (screenState as SearchState.Fail).error
-                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Ошибка: $error", color = Color.Red)
-                }
-            }
-        }
+    var inputText by rememberSaveable { mutableStateOf("")
     }
-}
-
-@Composable
-fun SearchScreen(onClick: () -> Unit) { var inputText by rememberSaveable { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -164,7 +104,7 @@ fun SearchScreen(onClick: () -> Unit) { var inputText by rememberSaveable { muta
             },
             leadingIcon = {
                 Icon(
-                    modifier = Modifier.clickable{},
+                    modifier = Modifier.clickable{ viewModel.search(inputText) },
                     imageVector = Icons.Default.Search,
                     contentDescription = null
                 )
@@ -183,6 +123,44 @@ fun SearchScreen(onClick: () -> Unit) { var inputText by rememberSaveable { muta
                 cursorColor = MaterialTheme.colorScheme.primary
             ),
             shape = RoundedCornerShape(size = 8.dp))
+
+        when (screenState) {
+            is SearchState.Initial -> {
+                Box(modifier = modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp), contentAlignment = Alignment.Center) {
+                    Text(stringResource(R.string.find_track))
+                }
+            }
+            is SearchState.Searching -> {
+                Box(modifier = modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            is SearchState.Success -> {
+                val tracks = (screenState as SearchState.Success).foundList
+                LazyColumn(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                ) {
+                    items(tracks.size) { index ->
+                        TrackListItem(track = tracks[index])
+                        HorizontalDivider(thickness = 0.5.dp)
+                    }
+                }
+            }
+            is SearchState.Fail -> {
+                val error = (screenState as SearchState.Fail).error
+                Box(modifier = modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp), contentAlignment = Alignment.Center) {
+                        Text(stringResource(R.string.error, error), color = Color.Red)
+                }
+            }
+        }
     }
 }
 
@@ -195,20 +173,36 @@ fun TrackListItem(track: Track) {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_music_icon),
-            contentDescription = "Трек ${track.trackName}"
+            contentDescription = stringResource(R.string.track, track.trackName)
         )
+
+        Spacer(Modifier.width(8.dp))
+
         Column(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.Start
         ) {
-            Text(track.trackName, fontWeight = FontWeight.Bold)
-            Text(track.artistName)
+            Text(
+                text = track.trackName,
+                fontSize = 16.sp
+            )
+            Row{
+                Text(
+                    text = track.artistName + "  -",
+                    fontSize = 13.sp,
+                    color = Color.Gray
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = track.trackTime,
+                    fontSize = 13.sp,
+                    color = Color.Gray
+                )
+            }
         }
-        Column(
-            modifier = Modifier.weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(track.trackTime)
-        }
+        Image(
+            painter = painterResource(R.drawable.ic_right_arrow),
+            contentDescription = null
+        )
     }
 }
