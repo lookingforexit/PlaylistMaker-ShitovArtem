@@ -18,4 +18,5 @@
     <string name="find_track">Найти трек</string>
     <string name="error">Ошибка: %1$s</string>
     <string name="track">Трек %1$s</string>
+    <string name="nothing_found">Ничего не найдено</string>
 </resources>

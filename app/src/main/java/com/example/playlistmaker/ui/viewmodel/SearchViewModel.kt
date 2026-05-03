@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.data.network.Track
 import com.example.playlistmaker.domain.TracksRepository
+import com.example.playlistmaker.ui.screen.SearchScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +32,11 @@ class SearchViewModel(
             try {
                 _searchScreenState.update { SearchState.Searching }
                 val list = tracksRepository.searchTracks(expression = whatSearch)
-                _searchScreenState.update { SearchState.Success(foundList = list) }
+                if (list.isEmpty() && whatSearch.isBlank()) {
+                    _searchScreenState.update { SearchState.Initial }
+                } else {
+                    _searchScreenState.update { SearchState.Success(foundList = list) }
+                }
             } catch (e: IOException){
                 _searchScreenState.update { SearchState.Fail(e.message.toString()) }
             }

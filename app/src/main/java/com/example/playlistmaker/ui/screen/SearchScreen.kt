@@ -141,14 +141,25 @@ fun SearchScreen(onClick: () -> Unit, modifier: Modifier, viewModel: SearchViewM
             }
             is SearchState.Success -> {
                 val tracks = (screenState as SearchState.Success).foundList
-                LazyColumn(
-                    modifier = modifier
-                        .fillMaxSize()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                ) {
-                    items(tracks.size) { index ->
-                        TrackListItem(track = tracks[index])
-                        HorizontalDivider(thickness = 0.5.dp)
+                if (tracks.isEmpty()) {
+                    Box(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(stringResource(R.string.nothing_found))
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    ) {
+                        items(tracks.size) { index ->
+                            TrackListItem(track = tracks[index])
+                            HorizontalDivider(thickness = 0.5.dp)
+                        }
                     }
                 }
             }

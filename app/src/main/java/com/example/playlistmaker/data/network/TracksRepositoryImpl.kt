@@ -9,7 +9,7 @@ import kotlinx.coroutines.delay
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
     override suspend fun searchTracks(expression: String): List<Track> {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
-        delay(1000) // Эммулируем задержку ответа
+        delay(100) // Эммулируем задержку ответа
         return if (response.resultCode == 200) { // успешный запрос
             (response as TracksSearchResponse).results.map {
                 val seconds = it.trackTimeMillis / 1000

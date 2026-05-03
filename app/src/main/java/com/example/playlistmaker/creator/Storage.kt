@@ -4,6 +4,7 @@ import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.domain.TracksRepository
+import kotlin.collections.listOf
 
 class Storage {
     private val listTracks = listOf(
@@ -60,10 +61,12 @@ class Storage {
     )
 
     fun search(request: String): List<TrackDto> {
-        val result = listTracks.filter {
-            it.trackName
-                .lowercase()
-                .contains(request.lowercase())
+        val result = if (request.isBlank()) {
+            listOf()
+        } else {
+            listTracks.filter {
+                (it.trackName.lowercase().contains(request.lowercase()) || it.artistName.lowercase().contains(request.lowercase()))
+            }
         }
         return result
     }
