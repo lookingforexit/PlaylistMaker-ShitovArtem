@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.data.network.Track
 import com.example.playlistmaker.domain.TracksRepository
-import com.example.playlistmaker.ui.screen.SearchScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
