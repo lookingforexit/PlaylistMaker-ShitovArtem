@@ -1,6 +1,5 @@
 package com.example.playlistmaker.data.history
 
-import androidx.compose.runtime.MutableState
 import com.example.playlistmaker.domain.SearchHistoryRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
