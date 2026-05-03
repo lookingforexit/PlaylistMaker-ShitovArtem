@@ -1,9 +1,8 @@
 package com.example.playlistmaker.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.data.history.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.network.Track
 import com.example.playlistmaker.domain.TracksRepository
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +20,8 @@ sealed class SearchState {
 }
 
 class SearchViewModel(
-    private val tracksRepository: TracksRepository
+    private val tracksRepository: TracksRepository,
+    val historyRepository: SearchHistoryRepositoryImpl
 ) : ViewModel() {
     private val _searchScreenState = MutableStateFlow<SearchState>(SearchState.Initial)
     val searchScreenState  = _searchScreenState.asStateFlow()
@@ -42,14 +42,11 @@ class SearchViewModel(
         }
     }
 
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(Creator.getTracksRepository()) as T
-                }
+    fun searchAndAddToHistory(query: String) {
+        if (query.isNotBlank()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                historyRepository.addToHistory(query)
             }
+        }
     }
 }

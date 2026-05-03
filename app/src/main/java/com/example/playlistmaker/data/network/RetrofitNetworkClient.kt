@@ -10,4 +10,10 @@ class RetrofitNetworkClient(private val storage: Storage) : NetworkClient {
         val searchList = storage.search((request as TracksSearchRequest).expression)
         return TracksSearchResponse(searchList).apply { resultCode = 200 }
     }
+
+    override fun getAllTracks(): List<Track> {
+        return storage.listTracks.map {
+            Track(it.trackName, it.artistName, it.trackTimeMillis.toString(), null)
+        }
+    }
 }

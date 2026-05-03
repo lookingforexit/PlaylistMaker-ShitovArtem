@@ -7,7 +7,7 @@ import com.example.playlistmaker.domain.TracksRepository
 import kotlin.collections.listOf
 
 class Storage {
-    private val listTracks = listOf(
+    val listTracks = listOf(
         TrackDto(
             trackName = "Владивосток 2000",
             artistName = "Мумий Троль",
