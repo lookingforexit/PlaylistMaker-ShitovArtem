@@ -1,9 +1,7 @@
 package com.example.playlistmaker.ui.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlistmaker.data.network.Track
 import com.example.playlistmaker.data.playlist.Playlist
 import com.example.playlistmaker.domain.PlaylistsRepository
