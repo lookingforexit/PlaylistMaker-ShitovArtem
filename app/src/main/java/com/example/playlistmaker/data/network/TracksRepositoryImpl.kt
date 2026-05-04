@@ -15,7 +15,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                 val seconds = it.trackTimeMillis / 1000
                 val minutes = seconds / 60
                 val trackTime = "%02d".format(minutes) + ":" + "%02d".format(seconds - minutes * 60)
-                Track(it.trackName, it.artistName, trackTime, null) }
+                Track(0, it.trackName, it.artistName, trackTime, null) }
         } else {
             emptyList()
         }
