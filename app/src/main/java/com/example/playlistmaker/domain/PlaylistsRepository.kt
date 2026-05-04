@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain
 
-import com.example.playlistmaker.data.dto.Playlist
+import com.example.playlistmaker.data.playlist.Playlist
 import com.example.playlistmaker.data.network.Track
 import kotlinx.coroutines.flow.Flow
 

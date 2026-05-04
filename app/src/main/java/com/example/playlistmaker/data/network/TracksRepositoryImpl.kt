@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.network
 
-import com.example.playlistmaker.data.dto.TracksSearchRequest
-import com.example.playlistmaker.data.dto.TracksSearchResponse
+import com.example.playlistmaker.data.playlist.TracksSearchRequest
+import com.example.playlistmaker.data.playlist.TracksSearchResponse
 import com.example.playlistmaker.domain.NetworkClient
 import com.example.playlistmaker.domain.TracksRepository
 import kotlinx.coroutines.delay

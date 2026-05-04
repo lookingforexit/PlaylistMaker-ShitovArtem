@@ -1,6 +1,6 @@
 package com.example.playlistmaker.creator
 
-import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.data.playlist.TrackDto
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.domain.TracksRepository
