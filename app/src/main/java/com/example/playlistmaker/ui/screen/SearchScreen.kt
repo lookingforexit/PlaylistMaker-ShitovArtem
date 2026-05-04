@@ -62,11 +62,11 @@ import com.example.playlistmaker.ui.viewmodel.SearchState
 import com.example.playlistmaker.ui.viewmodel.SearchViewModel
 
 @Composable
-fun SearchScreen(onClick: () -> Unit, modifier: Modifier, viewModel: SearchViewModel) {
-    val screenState by viewModel.searchScreenState.collectAsState()
+fun SearchScreen(onClick: () -> Unit, modifier: Modifier, searchViewModel: SearchViewModel) {
+    val screenState by searchViewModel.searchScreenState.collectAsState()
 
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
-    val historyRequests by viewModel.historyRepository.getHistory().collectAsState(emptyList())
+    val historyRequests by searchViewModel.historyRepository.getHistory().collectAsState(emptyList())
     var isFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -116,7 +116,7 @@ fun SearchScreen(onClick: () -> Unit, modifier: Modifier, viewModel: SearchViewM
                 singleLine = true,
                 keyboardActions = KeyboardActions(
                     onSearch = {
-                        viewModel.searchAndAddToHistory(inputText.text)
+                        searchViewModel.searchAndAddToHistory(inputText.text)
                     }
                 ),
                 keyboardOptions = KeyboardOptions(
@@ -126,14 +126,14 @@ fun SearchScreen(onClick: () -> Unit, modifier: Modifier, viewModel: SearchViewM
                 placeholder = { Text(text = stringResource(R.string.search)) },
                 onValueChange = {
                     inputText = it
-                    viewModel.search(it.text)
+                    searchViewModel.search(it.text)
                 },
                 trailingIcon = {
                     if (inputText.text.isNotEmpty()) {
                         Icon(
                             modifier = Modifier.clickable{
                                 inputText = TextFieldValue("")
-                                viewModel.search(inputText.text)
+                                searchViewModel.search(inputText.text)
                             },
                             imageVector = Icons.Default.Clear,
                             contentDescription = null
@@ -142,7 +142,7 @@ fun SearchScreen(onClick: () -> Unit, modifier: Modifier, viewModel: SearchViewM
                 },
                 leadingIcon = {
                     Icon(
-                        modifier = Modifier.clickable{ viewModel.search(inputText.text) },
+                        modifier = Modifier.clickable{ searchViewModel.search(inputText.text) },
                         imageVector = Icons.Default.Search,
                         contentDescription = null
                     )
@@ -171,7 +171,7 @@ fun SearchScreen(onClick: () -> Unit, modifier: Modifier, viewModel: SearchViewM
                             text = it,
                             selection = TextRange(historyRequests.size)
                         )
-                        viewModel.search(it)
+                        searchViewModel.search(it)
                     }
                 )
             }
