@@ -60,7 +60,7 @@ fun PlaylistListItem(playlist: Playlist, onClick: () -> Unit) {
 }
 
 @Composable
-fun PlaylistScreen(
+fun PlaylistsScreen(
     modifier: Modifier,
     playlistsViewModel: PlaylistsViewModel,
     addNewPlaylist: () -> Unit,

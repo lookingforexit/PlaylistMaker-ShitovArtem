@@ -41,7 +41,8 @@ import com.example.playlistmaker.R
 fun MainScreen(
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onPlaylistsClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -65,13 +66,18 @@ fun MainScreen(
         }
         ScreenContent(
             onSearchClick = { onSearchClick() },
-            onSettingsClick = { onSettingsClick() }
+            onSettingsClick = { onSettingsClick() },
+            onPlaylistsClick = { onPlaylistsClick() }
         )
     }
 }
 
 @Composable
-fun ScreenContent(onSearchClick: () -> Unit, onSettingsClick: () -> Unit) {
+fun ScreenContent(
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onPlaylistsClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -85,15 +91,13 @@ fun ScreenContent(onSearchClick: () -> Unit, onSettingsClick: () -> Unit) {
             Element(
                 screenIcon = Icons.Default.Search,
                 text = stringResource(R.string.search),
-                onClick = {
-                    onSearchClick()
-                }
+                onClick = { onSearchClick() }
             )
 
             Element(
                 painterIcon = painterResource(R.drawable.ic_music_icon),
                 text = stringResource(R.string.playlist),
-                onClick = {  }
+                onClick = { onPlaylistsClick() }
             )
 
             Element(

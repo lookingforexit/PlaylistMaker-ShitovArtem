@@ -133,7 +133,7 @@ fun SearchScreen(onClick: () -> Unit, modifier: Modifier, searchViewModel: Searc
                         Icon(
                             modifier = Modifier.clickable{
                                 inputText = TextFieldValue("")
-                                searchViewModel.search(inputText.text)
+                                searchViewModel.clearQuery()
                             },
                             imageVector = Icons.Default.Clear,
                             contentDescription = null
