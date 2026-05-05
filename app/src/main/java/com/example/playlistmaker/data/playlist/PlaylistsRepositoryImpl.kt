@@ -39,7 +39,7 @@ class PlaylistsRepositoryImpl(): PlaylistsRepository {
         return _favoriteTracks.asStateFlow()
     }
 
-    override fun insertTrackToPlaylists(track: Track, playlistID: Int) {
+    override fun insertTrackToPlaylist(track: Track, playlistID: Int) {
         _playlists.update {
             val targetPlaylist = _playlists.value.find { it.id == playlistID } ?: return
             if (targetPlaylist.tracks.contains(track)) return

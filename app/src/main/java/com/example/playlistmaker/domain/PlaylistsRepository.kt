@@ -9,7 +9,7 @@ interface PlaylistsRepository {
     fun addPlaylist(name: String, description: String)
     fun getPlaylist(id: Int?): Flow<Playlist?>
     fun getFavoriteTracks(): Flow<List<Track>>
-    fun insertTrackToPlaylists(track: Track, playlistID: Int)
+    fun insertTrackToPlaylist(track: Track, playlistID: Int)
 
     suspend fun deleteTrackFromPlaylist(trackID: Int, playlistID: Int)
     suspend fun toggleFavorite(track: Track)
