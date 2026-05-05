@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.di
 
 import com.example.playlistmaker.ui.viewmodel.PlaylistsViewModel
 import com.example.playlistmaker.ui.viewmodel.SearchViewModel
+import com.example.playlistmaker.ui.viewmodel.TrackViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -11,5 +12,8 @@ val viewModelModule = module {
     }
     viewModel {
         PlaylistsViewModel(get())
+    }
+    viewModel {
+        TrackViewModel(get(), get())
     }
 }
