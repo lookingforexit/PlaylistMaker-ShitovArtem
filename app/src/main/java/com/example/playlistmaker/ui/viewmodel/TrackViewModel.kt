@@ -14,7 +14,7 @@ import java.io.IOException
 sealed class TrackScreenState {
     class Loading: TrackScreenState()
     class Error(val message: String): TrackScreenState()
-    class Success(track: Track): TrackScreenState()
+    class Success(val track: Track): TrackScreenState()
 }
 
 class TrackViewModel(
