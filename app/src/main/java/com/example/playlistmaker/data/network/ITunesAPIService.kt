@@ -15,7 +15,7 @@ interface ITunesAPIService {
     ): TracksSearchResponse
 
     @GET("/lookup")
-    suspend fun lookupTrackById(
-        @Query("id") trackId: Long
+    suspend fun lookupTrackByID(
+        @Query("id") trackID: Int
     ): TrackSearchByIDResponse
 }
