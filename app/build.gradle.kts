@@ -48,6 +48,7 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.koin.android)
     implementation(libs.gson)
+    implementation(libs.retrofit)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.material.icons.extended)
     androidTestImplementation(libs.androidx.junit)
