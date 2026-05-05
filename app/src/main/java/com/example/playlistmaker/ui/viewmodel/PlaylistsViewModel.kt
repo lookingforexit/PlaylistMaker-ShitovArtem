@@ -28,7 +28,7 @@ class PlaylistsViewModel (
     }
 
     suspend fun insertTrackToPlaylist(track: Track, playlistID: Int) {
-        playlistsRepository.insertTrackToPlaylists(track, playlistID)
+        playlistsRepository.insertTrackToPlaylist(track, playlistID)
     }
 
     suspend fun toggleFavorite(track: Track) {
