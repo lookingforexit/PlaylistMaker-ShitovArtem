@@ -1,5 +1,5 @@
 package com.example.playlistmaker.data.playlist
 
-data class TrackSearckByIDRequest(
+data class TrackSearchByIDRequest(
     val trackID: Int
 ) : BaseResponse()
