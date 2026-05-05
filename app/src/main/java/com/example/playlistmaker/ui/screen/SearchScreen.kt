@@ -62,7 +62,12 @@ import com.example.playlistmaker.ui.viewmodel.SearchState
 import com.example.playlistmaker.ui.viewmodel.SearchViewModel
 
 @Composable
-fun SearchScreen(onClick: () -> Unit, modifier: Modifier, searchViewModel: SearchViewModel) {
+fun SearchScreen(
+    onClick: () -> Unit,
+    modifier: Modifier,
+    searchViewModel: SearchViewModel,
+    onTrackClick: (Int) -> Unit
+) {
     val screenState by searchViewModel.searchScreenState.collectAsState()
 
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
@@ -213,7 +218,10 @@ fun SearchScreen(onClick: () -> Unit, modifier: Modifier, searchViewModel: Searc
                                 .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                         ) {
                             items(tracks.size) { index ->
-                                TrackListItem(track = tracks[index])
+                                TrackListItem(
+                                    track = tracks[index],
+                                    onClick = { onTrackClick(tracks[index].trackID) }
+                                )
                                 HorizontalDivider(thickness = 0.5.dp)
                             }
                         }
@@ -234,9 +242,16 @@ fun SearchScreen(onClick: () -> Unit, modifier: Modifier, searchViewModel: Searc
 }
 
 @Composable
-fun TrackListItem(track: Track) {
+fun TrackListItem(
+    track: Track,
+    onClick: (Int) -> Unit
+) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick(track.trackID)
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
