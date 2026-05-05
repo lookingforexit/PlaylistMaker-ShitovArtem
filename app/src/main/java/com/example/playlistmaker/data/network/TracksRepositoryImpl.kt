@@ -1,9 +1,12 @@
 package com.example.playlistmaker.data.network
 
+import com.example.playlistmaker.data.playlist.TrackSearchByIDRequest
+import com.example.playlistmaker.data.playlist.TrackSearchByIDResponse
 import com.example.playlistmaker.data.playlist.TracksSearchRequest
 import com.example.playlistmaker.data.playlist.TracksSearchResponse
 import com.example.playlistmaker.domain.NetworkClient
 import com.example.playlistmaker.domain.TracksRepository
+import com.example.playlistmaker.toTrackModel
 import kotlinx.coroutines.delay
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
@@ -12,16 +15,18 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
         delay(100) // Эммулируем задержку ответа
         return if (response.resultCode == 200) { // успешный запрос
             (response as TracksSearchResponse).results.map {
-                val seconds = it.trackTimeMillis / 1000
-                val minutes = seconds / 60
-                val trackTime = "%02d".format(minutes) + ":" + "%02d".format(seconds - minutes * 60)
-                Track(0, it.trackName, it.artistName, trackTime, null) }
+                it.toTrackModel()
+            }
         } else {
             emptyList()
         }
     }
 
-    override suspend fun getAllTracks(): List<Track> {
-        return networkClient.getAllTracks()
+    override suspend fun getTrackByID(trackID: Int): Track {
+        val resp = networkClient.doRequest(TrackSearchByIDRequest(trackID))
+        return (resp as TrackSearchByIDResponse)
+            .results
+            .first()
+            .toTrackModel()
     }
 }
