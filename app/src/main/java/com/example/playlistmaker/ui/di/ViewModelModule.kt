@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.di
 
+import com.example.playlistmaker.ui.viewmodel.AddPlaylistViewModel
 import com.example.playlistmaker.ui.viewmodel.PlaylistsViewModel
 import com.example.playlistmaker.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.ui.viewmodel.TrackViewModel
@@ -15,5 +16,8 @@ val viewModelModule = module {
     }
     viewModel {
         TrackViewModel(get(), get())
+    }
+    viewModel {
+        AddPlaylistViewModel(get())
     }
 }
