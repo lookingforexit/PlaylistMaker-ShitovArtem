@@ -101,7 +101,7 @@ fun PlaylistsScreen(
 
                     Text(
                         modifier =  Modifier.padding(horizontal = 12.dp),
-                        text = "Плейслисты",
+                        text = "Плейлисты",
                         fontWeight = FontWeight.Bold
                     )
                 },

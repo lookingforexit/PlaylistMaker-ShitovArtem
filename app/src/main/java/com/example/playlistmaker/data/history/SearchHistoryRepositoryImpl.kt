@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SearchHistoryRepositoryImpl(val scope: CoroutineScope): SearchHistoryRepository {
@@ -27,7 +28,5 @@ class SearchHistoryRepositoryImpl(val scope: CoroutineScope): SearchHistoryRepos
         }
     }
 
-    override fun getHistory(): Flow<List<String>> {
-        TODO("Not yet implemented")
-    }
+    override fun getHistory(): Flow<List<String>> = _historyState.asStateFlow()
 }
