@@ -23,7 +23,8 @@ class PlaylistsRepositoryImpl(): PlaylistsRepository {
                 id = _playlists.value.size + 1,
                 name = name,
                 description = description,
-                tracks = emptyList()
+                tracks = emptyList(),
+                image = null
             )
             currentPlaylist + newPlaylist
         }
