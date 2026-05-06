@@ -3,8 +3,10 @@ package com.example.playlistmaker.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.data.network.Track
+import com.example.playlistmaker.data.playlist.Playlist
 import com.example.playlistmaker.domain.PlaylistsRepository
 import com.example.playlistmaker.domain.TracksRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -34,7 +36,7 @@ class TrackViewModel(
         }
     }
 
-    fun addTrackInPlaylist(track: Track, playlistID: Int) {
+    fun addTrackToPlaylist(track: Track, playlistID: Int) {
         scope.launch {
             playlistsRepository.insertTrackToPlaylist(track, playlistID)
         }
@@ -51,5 +53,9 @@ class TrackViewModel(
         } catch (e: IOException) {
             _screenState.update { TrackScreenState.Error(e.message ?: "Unknown exception") }
         }
+    }
+
+    fun getAllPlaylists(): Flow<List<Playlist>> {
+        return playlistsRepository.getAllPlaylists()
     }
 }
