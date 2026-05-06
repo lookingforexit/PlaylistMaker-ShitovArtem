@@ -47,10 +47,10 @@ import com.valentinilk.shimmer.shimmer
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrackScreen(
-    viewModel: TrackViewModel,
+    trackViewModel: TrackViewModel,
     onBackClick: () -> Unit
 ) {
-    val trackScreenState by viewModel.screenState.collectAsState()
+    val trackScreenState by trackViewModel.screenState.collectAsState()
     var isLoaded by remember { mutableStateOf(false) }
 
     when (trackScreenState) {
@@ -155,7 +155,7 @@ fun TrackScreen(
 
                     FloatingActionButton(
                         onClick = {
-                            viewModel.addTrackToFavorite(track)
+                            trackViewModel.addTrackToFavorite(track)
                         },
                         content = {
                             Icon(

@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.playlistmaker.ui.screen.AddPlaylistScreen
 import com.example.playlistmaker.ui.screen.MainScreen
 import com.example.playlistmaker.ui.screen.PlaylistsScreen
 import com.example.playlistmaker.ui.screen.SearchScreen
@@ -89,7 +90,7 @@ class PlaylistHost(
                 PlaylistsScreen(
                     modifier = Modifier,
                     playlistsViewModel = playlistsViewModel,
-                    addNewPlaylist = {},
+                    addNewPlaylist = { navigateToAddPlaylist() },
                     navigateToPlaylist = {},
                     navigateBack = { navigateBack() }
                 )
@@ -100,7 +101,13 @@ class PlaylistHost(
                     trackViewModel.getTrackByID(trackID)
                 }
                 TrackScreen(
-                    viewModel = trackViewModel,
+                    trackViewModel = trackViewModel,
+                    onBackClick = { navigateBack() }
+                )
+            }
+            composable(ScreenRoute.AddPlaylist.route) {
+                AddPlaylistScreen(
+                    addPlaylistViewModel = addPlaylistViewModel,
                     onBackClick = { navigateBack() }
                 )
             }

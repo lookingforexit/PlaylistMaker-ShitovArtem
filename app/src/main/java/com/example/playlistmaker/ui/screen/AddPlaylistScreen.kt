@@ -25,11 +25,11 @@ import com.example.playlistmaker.ui.viewmodel.AddPlaylistViewModel
 
 @Composable
 fun AddPlaylistScreen(
-    viewModel: AddPlaylistViewModel,
+    addPlaylistViewModel: AddPlaylistViewModel,
     onBackClick: () -> Unit
 ) {
-    val playlistName by viewModel.playlistName.collectAsState()
-    val playlistDescription by viewModel.playlistDescription.collectAsState()
+    val playlistName by addPlaylistViewModel.playlistName.collectAsState()
+    val playlistDescription by addPlaylistViewModel.playlistDescription.collectAsState()
 
     Scaffold(
         topBar = {
@@ -55,7 +55,7 @@ fun AddPlaylistScreen(
                 modifier = Modifier.padding(innerPadding),
                 value = playlistName,
                 onValueChange = {
-                    viewModel.setPlaylistName(it)
+                    addPlaylistViewModel.setPlaylistName(it)
                 }
             )
 
@@ -65,7 +65,7 @@ fun AddPlaylistScreen(
                 modifier = Modifier.padding(innerPadding),
                 value = playlistDescription,
                 onValueChange = {
-                    viewModel.setPlaylistDescription(it)
+                    addPlaylistViewModel.setPlaylistDescription(it)
                 }
             )
 
@@ -76,7 +76,7 @@ fun AddPlaylistScreen(
                     .padding(horizontal = 20.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 onClick = {
-                    viewModel.savePlaylist()
+                    addPlaylistViewModel.savePlaylist()
                     onBackClick()
                 },
                 content = {
