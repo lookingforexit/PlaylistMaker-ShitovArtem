@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AddPlaylistScreenViewModel(
+class AddPlaylistViewModel(
     private val playlistsRepository: PlaylistsRepository
 ): ViewModel() {
     private val _playlistName = MutableStateFlow("")

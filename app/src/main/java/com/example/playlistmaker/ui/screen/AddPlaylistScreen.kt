@@ -21,11 +21,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.playlistmaker.ui.viewmodel.AddPlaylistScreenViewModel
+import com.example.playlistmaker.ui.viewmodel.AddPlaylistViewModel
 
 @Composable
 fun AddPlaylistScreen(
-    viewModel: AddPlaylistScreenViewModel,
+    viewModel: AddPlaylistViewModel,
     onBackClick: () -> Unit
 ) {
     val playlistName by viewModel.playlistName.collectAsState()
