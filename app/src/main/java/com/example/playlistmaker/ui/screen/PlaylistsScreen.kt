@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,10 +52,8 @@ fun PlaylistListItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .clickable(onClick = { onClick.invoke() }),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(horizontal = 16.dp)
+            .clickable(onClick = { onClick() }),
     ) {
         SubcomposeAsyncImage(
             model = playlist.image,
@@ -74,12 +73,14 @@ fun PlaylistListItem(
                 )
             }
         )
-        Text(
-            text = playlist.name
-        )
-        Text(
-            text = playlist.description
-        )
+        Column {
+            Text(
+                text = playlist.name
+            )
+            Text(
+                text = "${playlist.tracks.size}"
+            )
+        }
     }
 }
 

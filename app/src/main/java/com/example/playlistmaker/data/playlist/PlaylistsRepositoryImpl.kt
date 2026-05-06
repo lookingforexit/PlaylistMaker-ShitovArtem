@@ -40,7 +40,8 @@ class PlaylistsRepositoryImpl(): PlaylistsRepository {
         return _favoriteTracks.asStateFlow()
     }
 
-    override fun insertTrackToPlaylist(track: Track, playlistID: Int) {
+
+    override suspend fun insertTrackToPlaylist(track: Track, playlistID: Int) {
         _playlists.update {
             val targetPlaylist = _playlists.value.find { it.id == playlistID } ?: return
             if (targetPlaylist.tracks.contains(track)) return
@@ -52,7 +53,6 @@ class PlaylistsRepositoryImpl(): PlaylistsRepository {
             newPlaylist
         }
     }
-
 
     override suspend fun deleteTrackFromPlaylist(trackID: Int, playlistID: Int) {
         _playlists.update {
@@ -67,7 +67,7 @@ class PlaylistsRepositoryImpl(): PlaylistsRepository {
     }
 
     override suspend fun toggleFavorite(track: Track) {
-        if (track.favorite) _favoriteTracks.value = _favoriteTracks.value - track
+        if (track.favorite) _favoriteTracks.value -= track
         else _favoriteTracks.update {
             it + track
         }
@@ -78,5 +78,14 @@ class PlaylistsRepositoryImpl(): PlaylistsRepository {
         _playlists.update {
             currentPlaylist -> currentPlaylist.filter { it.id != playlistID }
         }
+    }
+
+    override suspend fun getAllTracksInPlaylist(playlistID: Int): List<Track> {
+        val playlist = _playlists.value.forEach {
+            currentPlaylist -> if (playlistID == currentPlaylist.id) {
+                return currentPlaylist.tracks
+        }
+        }
+        return emptyList()
     }
 }

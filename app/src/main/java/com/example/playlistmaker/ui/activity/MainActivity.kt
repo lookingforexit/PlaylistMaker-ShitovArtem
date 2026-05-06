@@ -11,6 +11,7 @@ import com.example.playlistmaker.ui.viewmodel.AddPlaylistViewModel
 import com.example.playlistmaker.ui.viewmodel.PlaylistsViewModel
 import com.example.playlistmaker.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.ui.viewmodel.TrackViewModel
+import com.example.playlistmaker.ui.viewmodel.TracksInPlaylistViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -18,6 +19,7 @@ class MainActivity : ComponentActivity() {
     private val playlistsViewModel: PlaylistsViewModel by viewModel()
     private val trackViewModel: TrackViewModel by viewModel()
     private val addPlaylistViewModel: AddPlaylistViewModel by viewModel()
+    private val tracksInPlaylistViewModel: TracksInPlaylistViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +32,8 @@ class MainActivity : ComponentActivity() {
                     searchViewModel,
                     playlistsViewModel,
                     trackViewModel,
-                    addPlaylistViewModel
+                    addPlaylistViewModel,
+                    tracksInPlaylistViewModel
                 )
                 playlistHost.NavGraph()
             }
