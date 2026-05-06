@@ -13,13 +13,7 @@ import kotlinx.coroutines.launch
 class PlaylistsViewModel (
     private val playlistsRepository: PlaylistsRepository
 ) : ViewModel() {
-    val playlists: Flow<List<Playlist>> = flow {
-        val collectedPlaylists = mutableListOf<Playlist>()
-        playlistsRepository.getAllPlaylists().collect {
-            playlist -> collectedPlaylists.addAll(playlist)
-            emit(collectedPlaylists.toList())
-        }
-    }
+    val playlists = playlistsRepository.getAllPlaylists()
 
     fun createNewPlaylist(name: String, description: String) {
         viewModelScope.launch(Dispatchers.IO) {
