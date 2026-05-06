@@ -27,6 +27,7 @@ sealed class ScreenRoute(val route: String) {
             return "track/${trackID}"
         }
     }
+    data object AddPlaylist: ScreenRoute("add_playlist")
 }
 
 class PlaylistHost(
@@ -57,7 +58,7 @@ class PlaylistHost(
     }
 
     private fun navigateToAddPlaylist() {
-        navController.navigate(ScreenRoute.AddPlayist.route)
+        navController.navigate(ScreenRoute.AddPlaylist.route)
     }
 
     @Composable

@@ -6,14 +6,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,7 +20,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,12 +37,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.playlist.Playlist
 import com.example.playlistmaker.ui.viewmodel.PlaylistsViewModel
-import org.koin.core.component.getScopeId
 
 @Composable
 fun PlaylistListItem(
@@ -69,7 +65,7 @@ fun PlaylistListItem(
             contentScale = ContentScale.Crop,
             loading = {
                 Image(
-                    painter = painterResource(id = R.drawable.vector),
+                    painter = painterResource(id = R.drawable.ic_music_icon),
                     contentDescription = "Album",
                     modifier = Modifier
                         .background(Color.LightGray.copy(alpha = 0.5f))
@@ -93,7 +89,7 @@ fun PlaylistsScreen(
     modifier: Modifier = Modifier,
     playlistsViewModel: PlaylistsViewModel,
     addNewPlaylist: () -> Unit,
-    navigateToPlaylist: (Long) -> Unit,
+    navigateToPlaylist: (Int) -> Unit,
     navigateBack: () -> Unit
 ) {
     val playlists by playlistsViewModel.playlists.collectAsState(emptyList())
