@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
 import com.example.playlistmaker.PlaylistHost
 import com.example.playlistmaker.ui.theme.PlaylistMakerTheme
+import com.example.playlistmaker.ui.viewmodel.AddPlaylistViewModel
 import com.example.playlistmaker.ui.viewmodel.PlaylistsViewModel
 import com.example.playlistmaker.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.ui.viewmodel.TrackViewModel
@@ -16,6 +17,7 @@ class MainActivity : ComponentActivity() {
     private val searchViewModel: SearchViewModel by viewModel()
     private val playlistsViewModel: PlaylistsViewModel by viewModel()
     private val trackViewModel: TrackViewModel by viewModel()
+    private val addPlaylistViewModel: AddPlaylistViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +29,8 @@ class MainActivity : ComponentActivity() {
                     navController,
                     searchViewModel,
                     playlistsViewModel,
-                    trackViewModel
+                    trackViewModel,
+                    addPlaylistViewModel
                 )
                 playlistHost.NavGraph()
             }

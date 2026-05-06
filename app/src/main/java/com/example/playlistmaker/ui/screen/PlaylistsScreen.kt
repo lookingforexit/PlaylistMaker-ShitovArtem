@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.playlistmaker.ui.screen
 
 import androidx.compose.foundation.Image
@@ -13,118 +15,143 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.SubcomposeAsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.playlist.Playlist
 import com.example.playlistmaker.ui.viewmodel.PlaylistsViewModel
+import org.koin.core.component.getScopeId
 
 @Composable
-fun PlaylistListItem(playlist: Playlist, onClick: () -> Unit) {
+fun PlaylistListItem(
+    modifier: Modifier = Modifier,
+    playlist: Playlist,
+    onClick: () -> Unit
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
+            .padding(16.dp)
             .clickable(onClick = { onClick.invoke() }),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Image(
-            modifier = Modifier.size(48.dp),
-            painter = painterResource(R.drawable.ic_helper),
-            contentDescription = playlist.name
+        SubcomposeAsyncImage(
+            model = playlist.image,
+            contentDescription = "Плейлист ${playlist.name}",
+            modifier = Modifier
+                .size(45.dp)
+                .clip(RoundedCornerShape(2.dp)),
+            contentScale = ContentScale.Crop,
+            loading = {
+                Image(
+                    painter = painterResource(id = R.drawable.vector),
+                    contentDescription = "Album",
+                    modifier = Modifier
+                        .background(Color.LightGray.copy(alpha = 0.5f))
+                        .alpha(0.4f),
+                    colorFilter = ColorFilter.tint(Color.Gray)
+                )
+            }
         )
-
-        Column(
-            modifier = Modifier.weight(1f),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(playlist.name, fontSize = 16.sp)
-            val text = "${playlist.tracks.size} tracks"
-            Text(text, fontSize = 11.sp, color = Color.Gray)
-        }
+        Text(
+            text = playlist.name
+        )
+        Text(
+            text = playlist.description
+        )
     }
 }
 
+
 @Composable
 fun PlaylistsScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     playlistsViewModel: PlaylistsViewModel,
     addNewPlaylist: () -> Unit,
-    navigateToPlaylist: (Int) -> Unit,
+    navigateToPlaylist: (Long) -> Unit,
     navigateBack: () -> Unit
 ) {
-    val playlist by playlistsViewModel.playlists.collectAsState(emptyList())
+    val playlists by playlistsViewModel.playlists.collectAsState(emptyList())
 
-    Box(
-       modifier = Modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 8.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.LightGray.copy(alpha = 0.75f)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clickable { navigateBack() },
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
-                )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
 
-                Text("Playlists", fontSize = 32.sp)
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp, start = 8.dp, end = 8.dp)
-            ) {
-                LazyColumn(
-                    modifier = modifier.fillMaxSize()
-                ) {
-                    items(playlist.size) {
-                        index -> PlaylistListItem(playlist = playlist[index]) {
-                            navigateToPlaylist(index)
-                        }
-                        HorizontalDivider(
-                            thickness = 0.5.dp
-                        )
-                    }
+                    Text(
+                        modifier =  Modifier.padding(horizontal = 12.dp),
+                        text = "Плейслисты",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                navigationIcon = {
+                    Icon(
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .size(32.dp)
+                            .clickable {
+                                navigateBack()
+                            },
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
                 }
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    addNewPlaylist()
+                },
+                modifier = Modifier.padding(bottom = 16.dp, end = 8.dp),
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add new playlist"
+                    )
+                },
+                shape = CircleShape
+            )
+        }
+    ) {innerPadding ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = innerPadding
+        ) {
+            items(playlists) {
+                PlaylistListItem(
+                    playlist = it,
+                    onClick = {
+                        navigateToPlaylist(it.id)
+                    }
+                )
             }
         }
     }
 
-    FloatingActionButton(
-        modifier = Modifier.padding(32.dp),
-        onClick = { addNewPlaylist() },
-        containerColor = Color.Gray,
-        contentColor = Color.White,
-        shape = CircleShape
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Add,
-            contentDescription = "Добавить плейлист"
-        )
-    }
 }
