@@ -37,14 +37,9 @@ class PlaylistsViewModel (
                 initialValue = emptyList()
             )
 
-
-    fun createNewPlaylist(name: String, description: String, image: String? = null) {
+    fun deletePlaylistByID(playlistID: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            playlistsRepository.addPlaylist(name, description, image)
+            playlistsRepository.deletePlaylist(playlistID)
         }
-    }
-
-    suspend fun deletePlaylistByID(playlistID: Int) {
-        playlistsRepository.deletePlaylist(playlistID)
     }
 }

@@ -4,6 +4,7 @@ package com.example.playlistmaker.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -55,13 +56,17 @@ fun PlaylistListItem(
     modifier: Modifier = Modifier,
     playlist: Playlist,
     tracksCount: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable(onClick = { onClick() }),
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         val imageModifier = Modifier
@@ -178,6 +183,9 @@ fun PlaylistsScreen(
                     playlist = playlist,
                     onClick = {
                         navigateToPlaylist(playlist.playlistID)
+                    },
+                    onLongClick = {
+                        playlistsViewModel.deletePlaylistByID(playlist.playlistID)
                     },
                     tracksCount = count
                 )

@@ -34,4 +34,11 @@ class TracksInPlaylistViewModel(
             }
         }
     }
+
+    fun deletePlaylist(playlistID: Int, onDeleted: () -> Unit) {
+        viewModelScope.launch {
+            playlistsRepository.deletePlaylist(playlistID)
+            onDeleted()
+        }
+    }
 }
