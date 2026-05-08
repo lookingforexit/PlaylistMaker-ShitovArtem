@@ -150,7 +150,8 @@ class PlaylistHost(
                 FavoriteTracksScreen(
                     favoriteTracksViewModel = favoriteTracksViewModel,
                     onBackClick = { navigateBack() },
-                    onTrackClick = { navigateToTrack(it) }
+                    onTrackClick = { navigateToTrack(it) },
+                    onLongTrackClick = {  }
                 )
             }
         }

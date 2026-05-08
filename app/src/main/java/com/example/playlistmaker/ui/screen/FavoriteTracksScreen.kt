@@ -21,13 +21,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.playlistmaker.data.network.Track
 import com.example.playlistmaker.ui.viewmodel.FavoriteTracksViewModel
 
 @Composable
 fun FavoriteTracksScreen(
     favoriteTracksViewModel: FavoriteTracksViewModel,
     onBackClick: () -> Unit,
-    onTrackClick: (Int) -> Unit
+    onTrackClick: (Int) -> Unit,
+    onLongTrackClick: (Track) -> Unit
 ) {
     val tracks by favoriteTracksViewModel.tracks.collectAsState()
 
@@ -70,7 +72,8 @@ fun FavoriteTracksScreen(
                     track = track,
                     onClick = {
                         onTrackClick(it)
-                    }
+                    },
+                    onLongTrackClick = { favoriteTracksViewModel.toggleFavorite(track) }
                 )
             }
         }

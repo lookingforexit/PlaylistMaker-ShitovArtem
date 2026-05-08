@@ -3,6 +3,7 @@ package com.example.playlistmaker.ui.screen
 import android.R.attr.onClick
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -109,7 +110,8 @@ fun TracksInPlaylistScreen(
                 ) { track ->
                     TrackListItemIn(
                         track = track,
-                        onClick = { onTrackClick(track.trackID) }
+                        onClick = { onTrackClick(it) },
+                        onLongTrackClick = {}
                     )
                 }
             }
@@ -120,15 +122,16 @@ fun TracksInPlaylistScreen(
 @Composable
 fun TrackListItemIn(
     track: Track,
-    onClick: (Int) -> Unit
+    onClick: (Int) -> Unit,
+    onLongTrackClick: (Track) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onClick(track.trackID)
-                Log.d("TrackListItemIn", "Track clicked: $track")
-            }
+            .combinedClickable(
+                onClick = { onClick(track.trackID) },
+                onLongClick = { onLongTrackClick(track) }
+            )
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
