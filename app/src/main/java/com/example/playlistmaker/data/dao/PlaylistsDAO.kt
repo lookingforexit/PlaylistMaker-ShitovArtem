@@ -12,13 +12,13 @@ interface PlaylistsDAO {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun addPlaylist(playlist: PlaylistEntity)
 
-    @Query("Select * from playlist")
+    @Query("Select * from playlists")
     fun getAllPlaylists(): Flow<List<PlaylistEntity>>
 
-    @Query("Delete from playlist where playlistID = :playlistID")
+    @Query("Delete from playlists where playlistID = :playlistID")
     suspend fun deletePlaylist(playlistID: Int)
 
-    @Query("Select * from playlist where playlistID = :playlistID")
+    @Query("Select * from playlists where playlistID = :playlistID")
     suspend fun getPlaylist(playlistID: Int): PlaylistEntity
 
 }
