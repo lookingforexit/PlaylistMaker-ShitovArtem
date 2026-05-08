@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -35,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.playlistmaker.ui.viewmodel.AddPlaylistViewModel
@@ -59,16 +61,23 @@ fun AddPlaylistScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Новый плейлист"
+                        modifier = Modifier.padding(start = 16.dp),
+                        text = "Новый плейлист",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 },
                 navigationIcon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Назад",
-                        modifier = Modifier.clickable {
-                            onBackClick()
-                        }
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .size(32.dp)
+                            .clickable {
+                                onBackClick()
+                            }
                     )
                 }
             )
