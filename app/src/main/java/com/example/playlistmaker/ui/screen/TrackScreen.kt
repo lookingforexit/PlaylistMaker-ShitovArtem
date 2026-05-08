@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -45,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -71,7 +74,7 @@ fun TrackScreen(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-    val playlists by trackViewModel.getAllPlaylists().collectAsState(emptyList())
+    val playlistsWithCounts by trackViewModel.playlistsWithCounts.collectAsState()
 
 
     when (trackScreenState) {
@@ -102,7 +105,7 @@ fun TrackScreen(
                 onDismiss = {
                     showBottomSheet = false
                 },
-                playlists = playlists,
+                playlistsWithCounts = playlistsWithCounts,
                 addTrackToPlaylist = {
                         track, playlistID ->
                     trackViewModel.addTrackToPlaylist(track, playlistID)
@@ -111,9 +114,9 @@ fun TrackScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 24.dp)
             ) {
                 TopAppBar(
+                    modifier = Modifier,
                     title = {
                         Text(text = "")
                     },
@@ -121,96 +124,125 @@ fun TrackScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            modifier = Modifier.clickable {
-                                onBackClick()
-                            }
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .size(32.dp)
+                                .clickable { onBackClick() },
                         )
                     }
                 )
 
-                Box(
+                Column(
                     modifier = Modifier
-                        .padding(24.dp)
-                        .size(312.dp)
-                        .align(Alignment.CenterHorizontally)
-                        .clip(RoundedCornerShape(16.dp))
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp)
                 ) {
-                    if (!isLoaded) {
-                        Box(
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 26.dp)
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .clip(RoundedCornerShape(16.dp))
+                    ) {
+                        if (!isLoaded) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .shimmer()
+                                    .background(Color.Gray.copy(alpha = 0.3f))
+                            )
+                        }
+
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(track.image)
+                                .crossfade(true)
+                                .listener(
+                                    onStart = {
+                                        isLoaded = false
+                                    },
+                                    onSuccess = { _, _ ->
+                                        isLoaded = true
+                                    },
+                                    onError = { _, _ ->
+                                        isLoaded = true
+                                    }
+                                ).build(),
+                            contentDescription = "Album",
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .shimmer()
-                                .background(Color.Gray.copy(alpha = 0.3f))
+                        )
+                    }
+                    Text(
+                        modifier = Modifier.padding(top = 26.dp),
+                        text = track.trackName,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(top = 12.dp),
+                        text = track.artistName,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(Modifier.height(52.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        FloatingActionButton(
+                            onClick = {
+                                showBottomSheet = true
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.Default.AddToPhotos,
+                                    contentDescription = "Add to favorites",
+                                    tint = Color.White
+                                )
+                            },
+                            shape = CircleShape,
+                            containerColor = Color.LightGray
+                        )
+
+                        FloatingActionButton(
+                            onClick = {
+                                trackViewModel.addTrackToFavorite(track)
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = if (track.favorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                    contentDescription = "Add to favorites",
+                                    tint = Color.White
+                                )
+                            },
+                            shape = CircleShape,
+                            containerColor = Color.LightGray
                         )
                     }
 
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(track.image)
-                            .crossfade(true)
-                            .listener(
-                                onStart = {
-                                    isLoaded = false
-                                },
-                                onSuccess = { _, _ ->
-                                    isLoaded = true
-                                },
-                                onError = { _, _ ->
-                                    isLoaded = true
-                                }
-                            ).build(),
-                        contentDescription = "Album",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                    )
-                }
-                Text(
-                    text = track.trackName,
-                    fontSize = 22.sp
-                )
+                    Spacer(Modifier.height(26.dp))
 
-                Text(
-                    text = track.artistName,
-                    fontSize = 14.sp
-                )
-
-                Spacer(Modifier.height(54.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    FloatingActionButton(
-                        onClick = {
-                            showBottomSheet = true
-                        },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Default.AddToPhotos,
-                                contentDescription = "Add to favorites",
-                                tint = Color.White
-                            )
-                        },
-                        shape = CircleShape,
-                        containerColor = Color.LightGray
-                    )
-
-                    FloatingActionButton(
-                        onClick = {
-                            trackViewModel.addTrackToFavorite(track)
-                        },
-                        content = {
-                            Icon(
-                                imageVector = if (track.favorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                contentDescription = "Add to favorites",
-                                tint = Color.White
-                            )
-                        },
-                        shape = CircleShape,
-                        containerColor = Color.LightGray
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Длительность",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = track.trackTime,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
         }
@@ -225,7 +257,7 @@ fun PlaylistsSheet(
     sheetState: SheetState,
     addTrackToPlaylist: (Track, Int) -> Unit,
     onDismiss: () -> Unit,
-    playlists: List<Playlist>
+    playlistsWithCounts: List<Pair<Playlist, Int>>
 ) {
     if (showBottomSheet) {
         ModalBottomSheet(
@@ -237,18 +269,32 @@ fun PlaylistsSheet(
                 BottomSheetDefaults.DragHandle()
             }
         ) {
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .fillMaxHeight(0.7f)
-                    .padding(24.dp),
+                    .padding(horizontal = 24.dp)
             ) {
-                items(count = playlists.size)
-                {
-                    Column {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 16.dp),
+                    text = "Добавить в плейлист",
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 32.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(playlistsWithCounts) { (playlist, tracksCount) ->
                         PlaylistItem(
-                            playlist = playlists[it],
+                            playlist = playlist,
+                            tracksCount = tracksCount,
                             onClick = {
-                                addTrackToPlaylist(track, playlists[it].playlistID)
+                                addTrackToPlaylist(track, playlist.playlistID)
                             }
                         )
                     }
@@ -262,6 +308,7 @@ fun PlaylistsSheet(
 @Composable
 fun PlaylistItem(
     playlist: Playlist,
+    tracksCount: Int,
     onClick: () -> Unit
 ) {
     Row(
@@ -269,7 +316,8 @@ fun PlaylistItem(
             .fillMaxWidth()
             .clickable {
                 onClick()
-            }
+            },
+        verticalAlignment = Alignment.CenterVertically
 
     ) {
         AsyncImage(
@@ -281,9 +329,19 @@ fun PlaylistItem(
                 .size(45.dp),
             contentScale = ContentScale.Crop
         )
-        Column {
+        Column(
+            modifier = Modifier.padding(start = 12.dp)
+        ) {
             Text(
-                text = playlist.name
+                text = playlist.name,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = getTracksCountString(tracksCount),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Gray
             )
         }
     }

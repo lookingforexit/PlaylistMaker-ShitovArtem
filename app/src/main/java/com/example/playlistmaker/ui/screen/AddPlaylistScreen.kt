@@ -158,8 +158,7 @@ fun AddPlaylistScreen(
                     .padding(horizontal = 24.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 onClick = {
-                    addPlaylistViewModel.savePlaylist()
-                    onBackClick()
+                    addPlaylistViewModel.savePlaylist(onSaved = onBackClick)
                 },
                 enabled = playlistName.isNotBlank(),
                 content = {

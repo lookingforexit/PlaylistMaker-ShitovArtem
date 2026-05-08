@@ -35,15 +35,16 @@ class AddPlaylistViewModel(
         _playlistDescription.update { description }
     }
 
-    fun savePlaylist() {
+    fun savePlaylist(onSaved: () -> Unit) {
         viewModelScope.launch {
             val uri = _selectedImage.value
-            val image = imageSaver.saveImageToInternalStorage(uri.toString())
+            val image = uri?.let { imageSaver.saveImageToInternalStorage(it.toString()) }
             playlistsRepository.addPlaylist(
                 name = _playlistName.value,
                 description = _playlistDescription.value,
                 image = image
             )
+            onSaved()
         }
 
     }

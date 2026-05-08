@@ -2,9 +2,9 @@
 
 package com.example.playlistmaker.ui.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,18 +28,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
-import com.example.playlistmaker.R
 import com.example.playlistmaker.data.playlist.Playlist
 import com.example.playlistmaker.ui.viewmodel.PlaylistsViewModel
 
@@ -62,34 +60,57 @@ fun PlaylistListItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable(onClick = { onClick() }),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        SubcomposeAsyncImage(
-            model = playlist.image,
-            contentDescription = "Плейлист ${playlist.name}",
-            modifier = Modifier
-                .size(45.dp)
-                .clip(RoundedCornerShape(2.dp)),
-            contentScale = ContentScale.Crop,
-            loading = {
-                Image(
-                    imageVector = Icons.Default.AddPhotoAlternate,
-                    contentDescription = "Album",
-                    modifier = Modifier
-                        .background(Color.LightGray.copy(alpha = 0.5f))
-                        .alpha(0.4f),
-                    colorFilter = ColorFilter.tint(Color.Gray)
-                )
-            }
-        )
-        Column {
+        val imageModifier = Modifier
+            .size(45.dp)
+            .clip(RoundedCornerShape(2.dp))
+
+        Box(
+            modifier = imageModifier.background(Color.LightGray.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center
+        ) {
+            SubcomposeAsyncImage(
+                model = playlist.image?.takeUnless { it.isBlank() },
+                contentDescription = "Плейлист ${playlist.name}",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                loading = {
+                    Icon(
+                        imageVector = Icons.Default.AddPhotoAlternate,
+                        contentDescription = "Album",
+                        modifier = Modifier
+                            .size(22.dp)
+                            .alpha(0.4f),
+                        tint = Color.Gray
+                    )
+                },
+                error = {
+                    Icon(
+                        imageVector = Icons.Default.AddPhotoAlternate,
+                        contentDescription = "Album",
+                        modifier = Modifier
+                            .size(22.dp)
+                            .alpha(0.4f),
+                        tint = Color.Gray
+                    )
+                }
+            )
+        }
+        Column(
+            modifier = Modifier.padding(start = 12.dp)
+        ) {
             Text(
-                text = playlist.name
+                text = playlist.name,
+                fontWeight = FontWeight.Bold
             )
             Text(
                 text = getTracksCountString(tracksCount),
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Gray
             )
         }
     }

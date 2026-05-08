@@ -11,7 +11,7 @@ import com.example.playlistmaker.data.dao.TracksDAO
         TrackEntity::class,
         PlaylistEntity::class,
         TableLinkEntity::class
-    ], version = 2, exportSchema = false
+    ], version = 3, exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun TracksDAO(): TracksDAO

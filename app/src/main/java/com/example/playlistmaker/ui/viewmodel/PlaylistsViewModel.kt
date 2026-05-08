@@ -7,6 +7,7 @@ import com.example.playlistmaker.domain.PlaylistsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -14,14 +15,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class PlaylistsViewModel (
     private val playlistsRepository: PlaylistsRepository
 ) : ViewModel() {
     val playlistsWithCounts: StateFlow<List<Pair<Playlist, Int>>> =
         playlistsRepository.getAllPlaylists()
+            .catch { emit(emptyList()) }
             .flatMapLatest { playlistList ->
                 val countFlows = playlistList.map { playlist ->
                     playlistsRepository.getCountTracksInPlaylist(playlist.playlistID)
+                        .catch { emit(0) }
                         .map { count -> playlist to count }
                 }
                 if (countFlows.isEmpty()) flowOf(emptyList())
