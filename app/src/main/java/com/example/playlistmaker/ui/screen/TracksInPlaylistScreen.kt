@@ -46,9 +46,10 @@ fun TracksInPlaylistScreen(
     tracksInPlaylistViewModel: TracksInPlaylistViewModel,
     playlistID: Int,
     onBackClick: () -> Unit,
-    onTrackClick: (Track) -> Unit
+    onTrackClick: (Int) -> Unit
 ) {
     val tracks by tracksInPlaylistViewModel.tracks.collectAsState()
+    val tracksCount by tracksInPlaylistViewModel.tracksCount.collectAsState()
 
     LaunchedEffect(playlistID) {
         tracksInPlaylistViewModel.getAllTracksInPlaylist(playlistID)
@@ -100,7 +101,7 @@ fun TracksInPlaylistScreen(
                 ) { track ->
                     TrackListItemIn(
                         track = track,
-                        onClick = { onTrackClick(track) }
+                        onClick = { onTrackClick(track.trackID) }
                     )
                 }
             }
@@ -111,13 +112,13 @@ fun TracksInPlaylistScreen(
 @Composable
 fun TrackListItemIn(
     track: Track,
-    onClick: () -> Unit
+    onClick: (Int) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                onClick()
+                onClick(track.trackID)
                 Log.d("TrackListItemIn", "Track clicked: $track")
             }
             .padding(horizontal = 16.dp, vertical = 8.dp),

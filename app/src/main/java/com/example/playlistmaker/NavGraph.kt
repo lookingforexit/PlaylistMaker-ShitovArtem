@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.playlistmaker.ui.screen.AddPlaylistScreen
+import com.example.playlistmaker.ui.screen.FavoriteTracksScreen
 import com.example.playlistmaker.ui.screen.MainScreen
 import com.example.playlistmaker.ui.screen.PlaylistsScreen
 import com.example.playlistmaker.ui.screen.SearchScreen
@@ -15,10 +16,12 @@ import com.example.playlistmaker.ui.screen.SettingsScreen
 import com.example.playlistmaker.ui.screen.TrackScreen
 import com.example.playlistmaker.ui.screen.TracksInPlaylistScreen
 import com.example.playlistmaker.ui.viewmodel.AddPlaylistViewModel
+import com.example.playlistmaker.ui.viewmodel.FavoriteTracksViewModel
 import com.example.playlistmaker.ui.viewmodel.PlaylistsViewModel
 import com.example.playlistmaker.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.ui.viewmodel.TrackViewModel
 import com.example.playlistmaker.ui.viewmodel.TracksInPlaylistViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 sealed class ScreenRoute(val route: String) {
     data object Main: ScreenRoute("main")
@@ -36,15 +39,12 @@ sealed class ScreenRoute(val route: String) {
             return "tracks_in_playlist/${playlistID}"
         }
     }
+
+    data object Favorite: ScreenRoute("favorite")
 }
 
 class PlaylistHost(
-    private val navController: NavHostController,
-    private val searchViewModel: SearchViewModel,
-    private val playlistsViewModel: PlaylistsViewModel,
-    private val trackViewModel: TrackViewModel,
-    private val addPlaylistViewModel: AddPlaylistViewModel,
-    private val tracksInPlaylistViewModel: TracksInPlaylistViewModel
+    private val navController: NavHostController
 ) {
     private fun navigateToSearch() {
         navController.navigate(ScreenRoute.Search.route)
@@ -74,6 +74,10 @@ class PlaylistHost(
         navController.navigate(ScreenRoute.TracksInPlaylist.createRoute(playlistID))
     }
 
+    private fun navigateToFavorite() {
+        navController.navigate(ScreenRoute.Favorite.route)
+    }
+
     @Composable
     fun NavGraph() {
         NavHost(
@@ -84,10 +88,12 @@ class PlaylistHost(
                 MainScreen(
                     onSearchClick = { navigateToSearch() },
                     onSettingsClick = { navigateToSettings() },
-                    onPlaylistsClick = { navigateToPlaylists() }
+                    onPlaylistsClick = { navigateToPlaylists() },
+                    onFavoriteClick = { navigateToFavorite() }
                 )
             }
             composable(ScreenRoute.Search.route) {
+                val searchViewModel: SearchViewModel = koinViewModel()
                 SearchScreen(
                     onClick = { navigateBack() },
                     modifier = Modifier.fillMaxSize(),
@@ -99,6 +105,7 @@ class PlaylistHost(
                 SettingsScreen(onClick = { navigateBack() })
             }
             composable(ScreenRoute.Playlists.route) {
+                val playlistsViewModel: PlaylistsViewModel = koinViewModel()
                 PlaylistsScreen(
                     modifier = Modifier,
                     playlistsViewModel = playlistsViewModel,
@@ -109,6 +116,7 @@ class PlaylistHost(
             }
             composable(ScreenRoute.Track.route) {
                 val trackID = it.arguments?.getString("trackID")?.toInt() ?: 0
+                val trackViewModel: TrackViewModel = koinViewModel()
                 LaunchedEffect(trackID) {
                     trackViewModel.getTrackByID(trackID)
                 }
@@ -118,6 +126,7 @@ class PlaylistHost(
                 )
             }
             composable(ScreenRoute.AddPlaylist.route) {
+                val addPlaylistViewModel: AddPlaylistViewModel = koinViewModel()
                 AddPlaylistScreen(
                     addPlaylistViewModel = addPlaylistViewModel,
                     onBackClick = { navigateBack() }
@@ -125,6 +134,7 @@ class PlaylistHost(
             }
             composable(ScreenRoute.TracksInPlaylist.route) { it ->
                 val playlistID = it.arguments?.getString("playlistID")?.toInt() ?: 0
+                val tracksInPlaylistViewModel: TracksInPlaylistViewModel = koinViewModel()
                 LaunchedEffect(playlistID) {
                     tracksInPlaylistViewModel.getAllTracksInPlaylist(playlistID)
                 }
@@ -132,7 +142,15 @@ class PlaylistHost(
                     tracksInPlaylistViewModel = tracksInPlaylistViewModel,
                     playlistID = playlistID,
                     onBackClick = { navigateBack() },
-                    onTrackClick = { navigateToTrack(it.trackID) }
+                    onTrackClick = { navigateToTrack(it) }
+                )
+            }
+            composable(route = ScreenRoute.Favorite.route) {
+                val favoriteTracksViewModel: FavoriteTracksViewModel = koinViewModel()
+                FavoriteTracksScreen(
+                    favoriteTracksViewModel = favoriteTracksViewModel,
+                    onBackClick = { navigateBack() },
+                    onTrackClick = { navigateToTrack(it) }
                 )
             }
         }

@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -36,15 +37,26 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.playlist.Playlist
 import com.example.playlistmaker.ui.viewmodel.PlaylistsViewModel
 
+fun getTracksCountString(tracksCount: Int): String {
+    val prefix = "$tracksCount "
+    return when {
+        tracksCount % 10 == 1 && tracksCount % 100 != 11 -> prefix + "трек"
+        tracksCount % 10 in 2..4 && tracksCount % 100 !in 12..14 -> prefix + "трека"
+        else -> prefix + "треков"
+    }
+}
+
 @Composable
 fun PlaylistListItem(
     modifier: Modifier = Modifier,
     playlist: Playlist,
+    tracksCount: Int,
     onClick: () -> Unit
 ) {
     Row(
@@ -62,7 +74,7 @@ fun PlaylistListItem(
             contentScale = ContentScale.Crop,
             loading = {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_music_icon),
+                    imageVector = Icons.Default.AddPhotoAlternate,
                     contentDescription = "Album",
                     modifier = Modifier
                         .background(Color.LightGray.copy(alpha = 0.5f))
@@ -76,7 +88,8 @@ fun PlaylistListItem(
                 text = playlist.name
             )
             Text(
-                text = "${playlist.tracks.size}"
+                text = getTracksCountString(tracksCount),
+                fontSize = 12.sp
             )
         }
     }
@@ -91,7 +104,7 @@ fun PlaylistsScreen(
     navigateToPlaylist: (Int) -> Unit,
     navigateBack: () -> Unit
 ) {
-    val playlists by playlistsViewModel.playlists.collectAsState(emptyList())
+    val playlistsWithCounts by playlistsViewModel.playlistsWithCounts.collectAsState(emptyList())
 
     Scaffold(
         topBar = {
@@ -138,12 +151,14 @@ fun PlaylistsScreen(
             modifier = Modifier.fillMaxSize(),
             contentPadding = innerPadding
         ) {
-            items(playlists) {
+            items(playlistsWithCounts) { item ->
+                val (playlist, count) = item
                 PlaylistListItem(
-                    playlist = it,
+                    playlist = playlist,
                     onClick = {
-                        navigateToPlaylist(it.id)
-                    }
+                        navigateToPlaylist(playlist.playlistID)
+                    },
+                    tracksCount = count
                 )
             }
         }

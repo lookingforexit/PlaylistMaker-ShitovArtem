@@ -42,7 +42,8 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onPlaylistsClick: () -> Unit
+    onPlaylistsClick: () -> Unit,
+    onFavoriteClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -67,7 +68,8 @@ fun MainScreen(
         ScreenContent(
             onSearchClick = { onSearchClick() },
             onSettingsClick = { onSettingsClick() },
-            onPlaylistsClick = { onPlaylistsClick() }
+            onPlaylistsClick = { onPlaylistsClick() },
+            onFavoriteClick = { onFavoriteClick() }
         )
     }
 }
@@ -76,7 +78,8 @@ fun MainScreen(
 fun ScreenContent(
     onSearchClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onPlaylistsClick: () -> Unit
+    onPlaylistsClick: () -> Unit,
+    onFavoriteClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -103,7 +106,7 @@ fun ScreenContent(
             Element(
                 screenIcon = Icons.Default.FavoriteBorder,
                 text = stringResource(R.string.favorite),
-                onClick = { }
+                onClick = { onFavoriteClick() }
             )
 
             Element(

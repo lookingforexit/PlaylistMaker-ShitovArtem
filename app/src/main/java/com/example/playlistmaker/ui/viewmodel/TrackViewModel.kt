@@ -27,31 +27,33 @@ class TrackViewModel(
     val screenState = _screenState.asStateFlow()
 
     private val _track = MutableStateFlow<Track?>(null)
-    fun getTrack() = _track.asStateFlow()
 
     val scope = viewModelScope
     fun addTrackToFavorite(track: Track) {
         scope.launch {
-            playlistsRepository.toggleFavorite(track)
+            tracksRepository.updateTrackFavoriteStatus(track)
+            val updatedTrack = track.copy(favorite = !track.favorite)
+            _track.update { updatedTrack }
+            _screenState.update { TrackScreenState.Success(updatedTrack) }
         }
     }
 
     fun addTrackToPlaylist(track: Track, playlistID: Int) {
         scope.launch {
-            playlistsRepository.insertTrackToPlaylist(track, playlistID)
+            tracksRepository.insertTrackToPlaylist(track, playlistID)
         }
     }
 
     fun getTrackByID(trackID: Int) {
-        try {
-            _screenState.update { TrackScreenState.Loading() }
-            viewModelScope.launch {
+        _screenState.update { TrackScreenState.Loading() }
+        viewModelScope.launch {
+            try {
                 val response = tracksRepository.getTrackByID(trackID)
                 _track.update { response }
                 _screenState.update { TrackScreenState.Success(response) }
+            } catch (e: IOException) {
+                _screenState.update { TrackScreenState.Error(e.message ?: "Unknown exception") }
             }
-        } catch (e: IOException) {
-            _screenState.update { TrackScreenState.Error(e.message ?: "Unknown exception") }
         }
     }
 

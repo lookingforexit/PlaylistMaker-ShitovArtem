@@ -23,6 +23,6 @@ import androidx.room.ForeignKey.Companion.CASCADE
     ]
 )
 class TableLinkEntity(
-    val trackId: Long,
-    val playlistId: Long
+    val trackID: Int,
+    val playlistID: Int
 )

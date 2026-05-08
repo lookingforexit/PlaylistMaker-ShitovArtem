@@ -2,38 +2,45 @@ package com.example.playlistmaker.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.data.network.Track
 import com.example.playlistmaker.data.playlist.Playlist
 import com.example.playlistmaker.domain.PlaylistsRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class PlaylistsViewModel (
     private val playlistsRepository: PlaylistsRepository
 ) : ViewModel() {
-    val playlists = playlistsRepository.getAllPlaylists()
+    val playlistsWithCounts: StateFlow<List<Pair<Playlist, Int>>> =
+        playlistsRepository.getAllPlaylists()
+            .flatMapLatest { playlistList ->
+                val countFlows = playlistList.map { playlist ->
+                    playlistsRepository.getCountTracksInPlaylist(playlist.playlistID)
+                        .map { count -> playlist to count }
+                }
+                if (countFlows.isEmpty()) flowOf(emptyList())
+                else combine(countFlows) { it.toList() }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
 
-    fun createNewPlaylist(name: String, description: String) {
+
+    fun createNewPlaylist(name: String, description: String, image: String? = null) {
         viewModelScope.launch(Dispatchers.IO) {
-            playlistsRepository.addPlaylist(name, description)
+            playlistsRepository.addPlaylist(name, description, image)
         }
     }
 
-    suspend fun insertTrackToPlaylist(track: Track, playlistID: Int) {
-        playlistsRepository.insertTrackToPlaylist(track, playlistID)
-    }
-
-    suspend fun toggleFavorite(track: Track) {
-        playlistsRepository.toggleFavorite(track)
-    }
-
-    suspend fun deleteTrackFromPlaylist(trackID: Int, playlistID: Int) {
-        playlistsRepository.deleteTrackFromPlaylist(trackID, playlistID)
-    }
-
     suspend fun deletePlaylistByID(playlistID: Int) {
-        playlistsRepository.deletePlaylistByID(playlistID)
+        playlistsRepository.deletePlaylist(playlistID)
     }
 }
