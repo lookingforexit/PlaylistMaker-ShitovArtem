@@ -15,26 +15,13 @@ import com.example.playlistmaker.ui.viewmodel.TracksInPlaylistViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
-    private val searchViewModel: SearchViewModel by viewModel()
-    private val playlistsViewModel: PlaylistsViewModel by viewModel()
-    private val trackViewModel: TrackViewModel by viewModel()
-    private val addPlaylistViewModel: AddPlaylistViewModel by viewModel()
-    private val tracksInPlaylistViewModel: TracksInPlaylistViewModel by viewModel()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             PlaylistMakerTheme {
                 val navController = rememberNavController()
-                val playlistHost = PlaylistHost(
-                    navController,
-                    searchViewModel,
-                    playlistsViewModel,
-                    trackViewModel,
-                    addPlaylistViewModel,
-                    tracksInPlaylistViewModel
-                )
+                val playlistHost = PlaylistHost(navController)
                 playlistHost.NavGraph()
             }
         }
